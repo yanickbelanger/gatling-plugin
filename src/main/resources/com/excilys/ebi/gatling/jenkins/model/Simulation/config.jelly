@@ -1,0 +1,13 @@
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form" xmlns:g="/com/excilys/ebi/gatling/jenkins/tags">
+	<f:entry title="${%Name}">
+		<f:textbox field="name" value="${instance.name}"
+		           checkUrl="'descriptorByName/com.excilys.ebi.gatling.jenkins.model.Simulation/checkName?val='+this.value"/>
+	</f:entry>
+	<f:entry title="${%Fail}">
+		<g:repeatableProperty field="failConditions" add="${%AddFail}"/>
+	</f:entry>
+	<f:entry title="${%Unstable}">
+		<g:repeatableProperty field="unstableConditions" add="${%AddUnstable}"/>
+	</f:entry>
+</j:jelly>
