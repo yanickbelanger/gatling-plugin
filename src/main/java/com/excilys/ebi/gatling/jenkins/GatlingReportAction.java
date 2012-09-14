@@ -16,14 +16,16 @@
 package com.excilys.ebi.gatling.jenkins;
 
 import hudson.FilePath;
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.AbstractBuild;
 import hudson.model.DirectoryBrowserSupport;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+
+import java.io.IOException;
 
 import javax.servlet.ServletException;
-import java.io.IOException;
+
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 public class GatlingReportAction implements Action {
 	private final AbstractBuild<?, ?> build;

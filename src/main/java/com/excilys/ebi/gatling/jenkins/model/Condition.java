@@ -15,17 +15,21 @@
  */
 package com.excilys.ebi.gatling.jenkins.model;
 
-import com.excilys.ebi.gatling.jenkins.RequestReport;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
 import jenkins.model.Jenkins;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
+import com.excilys.ebi.gatling.jenkins.RequestReport;
 
 public class Condition implements Describable<Condition> {
 
@@ -48,20 +52,20 @@ public class Condition implements Describable<Condition> {
 
 	public boolean isFulfilledBy(RequestReport report) {
 		switch (property) {
-			case ERROR_RATE:
-				return (report.getNumberOfRequests().getKO() * 100. / report.getNumberOfRequests().getTotal()) < conditionThreshold;
-			case MAX_RESPONSE_TIME:
-				return report.getMaxResponseTime().getOK() < conditionThreshold;
-			case MEAN_RESPONSE_TIME:
-				return report.getMeanResponseTime().getOK() < conditionThreshold;
-			case PERCENTILES_95:
-				return report.getPercentiles95().getOK() < conditionThreshold;
-			case PERCENTILES_99:
-				return report.getPercentiles99().getOK() < conditionThreshold;
-			case STANDARD_DEVIATION:
-				return report.getStandardDeviation().getOK() < conditionThreshold;
-			default:
-				return false;
+		case ERROR_RATE:
+			return (report.getNumberOfRequests().getKO() * 100. / report.getNumberOfRequests().getTotal()) < conditionThreshold;
+		case MAX_RESPONSE_TIME:
+			return report.getMaxResponseTime().getOK() < conditionThreshold;
+		case MEAN_RESPONSE_TIME:
+			return report.getMeanResponseTime().getOK() < conditionThreshold;
+		case PERCENTILES_95:
+			return report.getPercentiles95().getOK() < conditionThreshold;
+		case PERCENTILES_99:
+			return report.getPercentiles99().getOK() < conditionThreshold;
+		case STANDARD_DEVIATION:
+			return report.getStandardDeviation().getOK() < conditionThreshold;
+		default:
+			return false;
 		}
 	}
 
@@ -88,6 +92,5 @@ public class Condition implements Describable<Condition> {
 			}
 		}
 	}
-
 
 }

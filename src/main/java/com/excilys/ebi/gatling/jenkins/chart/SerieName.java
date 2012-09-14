@@ -15,12 +15,12 @@
  */
 package com.excilys.ebi.gatling.jenkins.chart;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-
-import java.io.IOException;
 
 public class SerieName implements JsonSerializable, Comparable<SerieName> {
 	final String name;
@@ -42,12 +42,15 @@ public class SerieName implements JsonSerializable, Comparable<SerieName> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		SerieName serieName = (SerieName) o;
 
-		if (name != null ? !name.equals(serieName.name) : serieName.name != null) return false;
+		if (name != null ? !name.equals(serieName.name) : serieName.name != null)
+			return false;
 
 		return true;
 	}

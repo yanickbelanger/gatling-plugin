@@ -15,9 +15,6 @@
  */
 package com.excilys.ebi.gatling.jenkins.chart;
 
-import com.excilys.ebi.gatling.jenkins.GatlingBuildAction;
-import com.excilys.ebi.gatling.jenkins.RequestReport;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 
@@ -27,6 +24,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.excilys.ebi.gatling.jenkins.GatlingBuildAction;
+import com.excilys.ebi.gatling.jenkins.RequestReport;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Graph<Y extends Number> {
 	private static final Logger LOGGER = Logger.getLogger(Graph.class.getName());
@@ -50,7 +51,8 @@ public abstract class Graph<Y extends Number> {
 				}
 			}
 
-			if (numberOfBuild >= maxBuildsToDisplay) break;
+			if (numberOfBuild >= maxBuildsToDisplay)
+				break;
 		}
 	}
 

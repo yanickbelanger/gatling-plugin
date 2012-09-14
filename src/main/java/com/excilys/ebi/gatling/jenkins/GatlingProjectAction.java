@@ -15,16 +15,16 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.chart.Graph;
+import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
+import hudson.model.Action;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Action;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
+import com.excilys.ebi.gatling.jenkins.chart.Graph;
 
 public class GatlingProjectAction implements Action {
 
@@ -59,7 +59,6 @@ public class GatlingProjectAction implements Action {
 		}
 		return false;
 	}
-
 
 	public Graph<Long> getDashboardGraph() {
 		return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY_DASHBOARD) {

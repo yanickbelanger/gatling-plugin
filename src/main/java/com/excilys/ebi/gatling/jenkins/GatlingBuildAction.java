@@ -15,15 +15,14 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import hudson.model.AbstractBuild;
+import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
 import hudson.model.Action;
+import hudson.model.AbstractBuild;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
 
 public class GatlingBuildAction implements Action {
 

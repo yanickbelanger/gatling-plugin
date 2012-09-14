@@ -15,20 +15,26 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.model.*;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import com.excilys.ebi.gatling.jenkins.model.Simulation;
 
 public class GatlingPublisher extends Recorder {
 
@@ -113,4 +119,3 @@ public class GatlingPublisher extends Recorder {
 		return reportDirectory;
 	}
 }
-

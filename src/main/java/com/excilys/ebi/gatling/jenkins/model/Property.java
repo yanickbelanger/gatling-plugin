@@ -19,12 +19,7 @@ import org.jvnet.localizer.ResourceBundleHolder;
 
 public enum Property {
 
-	ERROR_RATE,
-	MAX_RESPONSE_TIME,
-	MEAN_RESPONSE_TIME,
-	STANDARD_DEVIATION,
-	PERCENTILES_95,
-	PERCENTILES_99;
+	ERROR_RATE, MAX_RESPONSE_TIME, MEAN_RESPONSE_TIME, STANDARD_DEVIATION, PERCENTILES_95, PERCENTILES_99;
 
 	private final ResourceBundleHolder holder = ResourceBundleHolder.get(Messages.class);
 

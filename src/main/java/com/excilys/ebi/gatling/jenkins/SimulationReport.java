@@ -15,16 +15,17 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.model.Condition;
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.FilePath;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+
+import com.excilys.ebi.gatling.jenkins.model.Condition;
+import com.excilys.ebi.gatling.jenkins.model.Simulation;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SimulationReport {
 
