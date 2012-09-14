@@ -1,0 +1,17 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:l="/lib/layout">
+	<l:layout title="Main layout">
+		<l:side-panel>
+			<st:include it="${it.build}" page="sidepanel.jelly"/>
+		</l:side-panel>
+		<l:main-panel>
+			<h1>${%BuildPageTitle}</h1>
+			<h2>${%AvailableReports} :</h2>
+			<ul>
+				<j:forEach items="${it.reports}" var="simulation">
+					<li><a href="../${it.getReportURL(simulation)}">${simulation}</a></li>
+				</j:forEach>
+			</ul>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

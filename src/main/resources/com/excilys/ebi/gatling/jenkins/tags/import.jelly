@@ -1,0 +1,12 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+	<script language="javascript" type="text/javascript" src="/plugin/gatling-jenkins-plugin/js/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript"
+	        src="/plugin/gatling-jenkins-plugin/js/jqplot/jquery.jqplot.min.js"></script>
+	<script type="text/javascript"
+	        src="/plugin/gatling-jenkins-plugin/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
+	<script type="text/javascript" src="/plugin/gatling-jenkins-plugin/js/jqplot/plugins/jqplot.cursor.min.js"></script>
+	<script type="text/javascript"
+	        src="/plugin/gatling-jenkins-plugin/js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/plugin/gatling-jenkins-plugin/js/jqplot/jquery.jqplot.min.css"/>
+</j:jelly>

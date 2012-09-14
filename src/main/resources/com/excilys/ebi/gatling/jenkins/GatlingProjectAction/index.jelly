@@ -1,0 +1,43 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:fmt="jelly:fmt" xmlns:l="/lib/layout"
+         xmlns:g="/com/excilys/ebi/gatling/jenkins/tags">
+	<l:layout title="Main layout">
+		<l:header>
+			<g:import/>
+		</l:header>
+		<l:side-panel>
+			<st:include it="${it.project}" page="sidepanel.jelly"/>
+		</l:side-panel>
+		<l:main-panel>
+			<h1>${%ProjectPageTitle}</h1>
+			<g:graph id="meanResponseTime" title="${%MeanResponseTimeChartTitle}"
+			         seriesNames="${it.meanResponseTimeGraph.seriesNamesJSON}"
+			         data="${it.meanResponseTimeGraph.seriesJSON}" yAxisUnit="ms"
+			         height="400" width="500"/>
+			<g:graph id="responseTimePercentile" title="${%ResponseTimePercentileChartTitle}"
+			         seriesNames="${it.percentileResponseTimeGraph.seriesNamesJSON}"
+			         data="${it.percentileResponseTimeGraph.seriesJSON}" yAxisUnit="ms"
+			         height="400" width="500"/>
+			<g:graph id="requestKO" title="${%RequestKOChartTitle}"
+			         seriesNames="${it.requestKOPercentageGraph.seriesNamesJSON}"
+			         yAxisUnit="%"
+			         data="${it.requestKOPercentageGraph.seriesJSON}" height="400" width="500"/>
+			<h2>${%AvailableReports} :</h2>
+			<ul>
+				<j:forEach items="${it.reports.entrySet()}" var="build">
+					<li>
+						Build # ${build.key.number} (<fmt:formatDate value="${build.key.time}" type="both"/>)
+						<ul>
+							<j:forEach items="${build.value}" var="simulation">
+								<li>
+									<a href="../${it.getReportURL(build.key.number, simulation)}" target="_blank">
+										${simulation}
+									</a>
+								</li>
+							</j:forEach>
+						</ul>
+					</li>
+				</j:forEach>
+			</ul>
+		</l:main-panel>
+	</l:layout>
+</j:jelly>
