@@ -11,6 +11,16 @@
 	<artifactId>gatling-jenkins-plugin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
+	<name>Gatling Jenkins Plugin</name>
+	<url>http://gatling-tool.org</url>
+
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<properties>
 		<jackson.version>2.0.6</jackson.version>
@@ -138,6 +148,8 @@
 							<exclude>**/*.properties</exclude>
 							<exclude>**/*.js</exclude>
 							<exclude>**/*.css</exclude>
+							<exclude>**/*.html</exclude>
+							<exclude>work/**</exclude>
 						</excludes>
 					</configuration>
 					<executions>
