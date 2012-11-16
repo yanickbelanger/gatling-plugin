@@ -43,12 +43,11 @@ public abstract class Graph<Y extends Number> {
 
 			if (action != null) {
 				numberOfBuild++;
-				for (Map.Entry<String, RequestReport> entry : action.getRequestsReports().entrySet()) {
-					if (!series.containsKey(new SerieName(entry.getKey())))
-						series.put(new SerieName(entry.getKey()), new Serie<Integer, Y>());
+				SerieName name = new SerieName(action.getSimulationName());
+				if (!series.containsKey(name))
+					series.put(name, new Serie<Integer, Y>());
 
-					series.get(new SerieName(entry.getKey())).addPoint(build.getNumber(), getValue(entry.getValue()));
-				}
+				series.get(name).addPoint(build.getNumber(), getValue(action.getRequestReport()));
 			}
 
 			if (numberOfBuild >= maxBuildsToDisplay)

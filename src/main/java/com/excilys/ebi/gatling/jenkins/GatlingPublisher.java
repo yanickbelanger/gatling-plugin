@@ -23,7 +23,6 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
-import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -39,23 +38,13 @@ public class GatlingPublisher extends Recorder {
 
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-		GatlingBuildAction action = new GatlingBuildAction(build);
-
 		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir(), simulation.getName());
-
-		build.addAction(new GatlingReportAction(build, simulation.getName(), reportDirectory));
 
 		SimulationReport report = new SimulationReport(reportDirectory, simulation);
 		report.readStatsFile();
 
-		if (report.isBuildFailed()) {
-			build.setResult(Result.FAILURE);
-		}
-		if (report.isBuildUnstable()) {
-			build.setResult(Result.UNSTABLE);
-		}
+		GatlingBuildAction action = new GatlingBuildAction(build, simulation.getName(), report.getGlobalReport(), reportDirectory);
 
-		action.getRequestsReports().put(simulation.getName(), report.getGlobalReport());
 		build.addAction(action);
 		return true;
 	}

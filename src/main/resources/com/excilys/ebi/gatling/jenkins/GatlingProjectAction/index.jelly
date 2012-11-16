@@ -12,29 +12,20 @@
 			<g:graph id="meanResponseTime" title="${%MeanResponseTimeChartTitle}"
 			         seriesNames="${it.meanResponseTimeGraph.seriesNamesJSON}"
 			         data="${it.meanResponseTimeGraph.seriesJSON}" yAxisUnit="ms"
-			         height="400" width="500"/>
+			         height="400px" width="100%"/>
 			<g:graph id="responseTimePercentile" title="${%ResponseTimePercentileChartTitle}"
 			         seriesNames="${it.percentileResponseTimeGraph.seriesNamesJSON}"
 			         data="${it.percentileResponseTimeGraph.seriesJSON}" yAxisUnit="ms"
-			         height="400" width="500"/>
+			         height="400px" width="100%"/>
 			<g:graph id="requestKO" title="${%RequestKOChartTitle}"
 			         seriesNames="${it.requestKOPercentageGraph.seriesNamesJSON}"
 			         yAxisUnit="%"
-			         data="${it.requestKOPercentageGraph.seriesJSON}" height="400" width="500"/>
+			         data="${it.requestKOPercentageGraph.seriesJSON}" height="400px" width="100%"/>
 			<h2>${%AvailableReports} :</h2>
 			<ul>
 				<j:forEach items="${it.reports.entrySet()}" var="build">
 					<li>
-						Build # ${build.key.number} (<fmt:formatDate value="${build.key.time}" type="both"/>)
-						<ul>
-							<j:forEach items="${build.value}" var="simulation">
-								<li>
-									<a href="../${it.getReportURL(build.key.number, simulation)}" target="_blank">
-										${simulation}
-									</a>
-								</li>
-							</j:forEach>
-						</ul>
+						Build # ${build.key.number} (<fmt:formatDate value="${build.key.time}" type="both"/>) : <a href="../${it.getReportURL(build.key.number)}" target="_blank">${build.value}</a>
 					</li>
 				</j:forEach>
 			</ul>

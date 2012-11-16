@@ -33,34 +33,14 @@ import org.kohsuke.stapler.QueryParameter;
 
 public class Simulation implements Describable<Simulation> {
 	private final String name;
-	private final List<Condition> failConditions;
-	private final List<Condition> unstableConditions;
 
 	@DataBoundConstructor
-	public Simulation(String name, List<Condition> failConditions, List<Condition> unstableConditions) {
+	public Simulation(String name) {
 		this.name = name;
-
-		if (failConditions == null)
-			this.failConditions = new ArrayList<Condition>();
-		else
-			this.failConditions = failConditions;
-
-		if (unstableConditions == null)
-			this.unstableConditions = new ArrayList<Condition>();
-		else
-			this.unstableConditions = unstableConditions;
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public List<Condition> getFailConditions() {
-		return failConditions;
-	}
-
-	public List<Condition> getUnstableConditions() {
-		return unstableConditions;
 	}
 
 	public Descriptor<Simulation> getDescriptor() {

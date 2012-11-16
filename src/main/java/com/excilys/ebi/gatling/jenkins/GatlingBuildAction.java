@@ -16,33 +16,45 @@
 package com.excilys.ebi.gatling.jenkins;
 
 import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
+
+import hudson.FilePath;
 import hudson.model.Action;
 import hudson.model.AbstractBuild;
+import hudson.model.DirectoryBrowserSupport;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 public class GatlingBuildAction implements Action {
 
 	private final AbstractBuild<?, ?> build;
-	private final Map<String, RequestReport> requestsReports = new HashMap<String, RequestReport>();
+	private final String simulationName;
+	private final RequestReport requestReport;
+	private final FilePath simulationDirectory;
 
-	public GatlingBuildAction(AbstractBuild<?, ?> build) {
+	public GatlingBuildAction(AbstractBuild<?, ?> build, String simulationName, RequestReport requestReport, FilePath simulationDirectory) {
 		this.build = build;
+		this.simulationName = simulationName;
+		this.requestReport = requestReport;
+		this.simulationDirectory = simulationDirectory;
 	}
 
 	public AbstractBuild<?, ?> getBuild() {
 		return build;
 	}
 
-	public Map<String, RequestReport> getRequestsReports() {
-		return requestsReports;
+	public String getSimulationName() {
+		return simulationName;
 	}
 
-	public List<String> getReports() {
-		return getReports(build);
+	public RequestReport getRequestReport() {
+		return requestReport;
+	}
+
+	public FilePath getSimulationDirectory() {
+		return simulationDirectory;
 	}
 
 	public String getIconFileName() {
@@ -57,16 +69,8 @@ public class GatlingBuildAction implements Action {
 		return URL_NAME;
 	}
 
-	public static List<String> getReports(AbstractBuild<?, ?> build) {
-		List<String> reports = new ArrayList<String>();
-
-		for (GatlingReportAction action : build.getActions(GatlingReportAction.class))
-			reports.add(action.getSimulationName());
-
-		return reports;
-	}
-
-	public String getReportURL(String simulation) {
-		return GatlingReportAction.getURL(simulation);
+	public void doSource(StaplerRequest request, StaplerResponse response) throws IOException, ServletException {
+		DirectoryBrowserSupport dbs = new DirectoryBrowserSupport(this, simulationDirectory, simulationName, null, false);
+		dbs.generateResponse(request, response, this);
 	}
 }
