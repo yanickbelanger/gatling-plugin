@@ -15,6 +15,10 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
+import com.excilys.ebi.gatling.jenkins.model.Condition;
+import com.excilys.ebi.gatling.jenkins.model.Simulation;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.FilePath;
 
 import java.io.File;
@@ -22,14 +26,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import com.excilys.ebi.gatling.jenkins.model.Condition;
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class SimulationReport {
 
-	private final FilePath workspace;
+	private final FilePath reportDirectory;
 
 	private static final String STATS_FILE_PATTERN = "**/global_stats.json";
 
@@ -37,8 +36,8 @@ public class SimulationReport {
 
 	private final Simulation simulation;
 
-	public SimulationReport(FilePath workspace, Simulation simulation) {
-		this.workspace = workspace;
+	public SimulationReport(FilePath reportDirectory, Simulation simulation) {
+		this.reportDirectory = reportDirectory;
 		this.simulation = simulation;
 	}
 
@@ -50,8 +49,7 @@ public class SimulationReport {
 	}
 
 	private File locateStatsFile() throws IOException, InterruptedException {
-		String pattern = new StringBuilder().append("**/").append(simulation.getName()).append("*/").append(STATS_FILE_PATTERN).toString();
-		FilePath[] files = workspace.list(pattern);
+		FilePath[] files = reportDirectory.list(STATS_FILE_PATTERN);
 
 		if (files.length == 0)
 			throw new FileNotFoundException("Unable to locate the simulation results for " + simulation.getName());
