@@ -15,30 +15,25 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
+import com.excilys.ebi.gatling.jenkins.model.Simulation;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
 
 public class GatlingPublisher extends Recorder {
-
-	private static final Logger LOGGER = Logger.getLogger(GatlingPublisher.class.getName());
 
 	private final Simulation simulation;
 
@@ -46,7 +41,11 @@ public class GatlingPublisher extends Recorder {
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
 		GatlingBuildAction action = new GatlingBuildAction(build);
 
-		SimulationReport report = new SimulationReport(build.getWorkspace(), simulation);
+		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir(), simulation.getName());
+
+		build.addAction(new GatlingReportAction(build, simulation.getName(), reportDirectory));
+
+		SimulationReport report = new SimulationReport(reportDirectory, simulation);
 		report.readStatsFile();
 
 		if (report.isBuildFailed()) {
@@ -57,11 +56,6 @@ public class GatlingPublisher extends Recorder {
 		}
 
 		action.getRequestsReports().put(simulation.getName(), report.getGlobalReport());
-
-		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir(), simulation.getName());
-
-		build.addAction(new GatlingReportAction(build, simulation.getName(), reportDirectory));
-
 		build.addAction(action);
 		return true;
 	}
@@ -87,20 +81,6 @@ public class GatlingPublisher extends Recorder {
 		return new GatlingProjectAction(project);
 	}
 
-	@Extension
-	public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
-
-		@Override
-		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
-			return true;
-		}
-
-		@Override
-		public String getDisplayName() {
-			return Messages.Title();
-		}
-	}
-
 	private FilePath saveFullReport(FilePath workspace, File rootDir, String simulationName) throws IOException, InterruptedException {
 		FilePath[] files = workspace.list("**/" + simulationName + "*/index.html");
 		FilePath parent = files[0].getParent();
@@ -118,4 +98,20 @@ public class GatlingPublisher extends Recorder {
 
 		return reportDirectory;
 	}
+
+	@Extension
+	public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+
+		@Override
+		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
+			return true;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return Messages.Title();
+		}
+	}
+
+
 }
