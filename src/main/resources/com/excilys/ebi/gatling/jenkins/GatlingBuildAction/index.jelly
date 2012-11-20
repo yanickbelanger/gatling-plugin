@@ -1,11 +1,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
          xmlns:l="/lib/layout">
-	<l:layout title="Main layout">
+	<l:layout title="${%BuildPageTitle}${it.build.number}">
 		<l:side-panel>
 			<st:include it="${it.build}" page="sidepanel.jelly"/>
 		</l:side-panel>
 		<l:main-panel>
-			<h1>${%BuildPageTitle}</h1>
+			<h1>${%BuildPageTitle}${it.build.number}</h1>
 			<h2>${%AvailableReports} :</h2>
 			<ul>
 				<j:forEach items="${it.reports}" var="simulation">
