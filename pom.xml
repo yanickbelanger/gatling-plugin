@@ -207,7 +207,7 @@
 				<plugin>
 					<groupId>com.mycila.maven-license-plugin</groupId>
 					<artifactId>maven-license-plugin</artifactId>
-					<version>${license-plugin.version}</version>
+					<version>${maven-license-plugin.version}</version>
 					<configuration>
 						<header>${header.basedir}/src/etc/header.txt</header>
 						<strictCheck>false</strictCheck>
