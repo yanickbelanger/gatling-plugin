@@ -184,6 +184,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.jenkins-ci.tools</groupId>
+				<artifactId>maven-hpi-plugin</artifactId>
+				<configuration>
+					<hpiName>${project.build.finalName}-${project.version}</hpiName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
