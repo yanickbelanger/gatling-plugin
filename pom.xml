@@ -65,7 +65,7 @@
 		<maven-source-plugin.version>2.2</maven-source-plugin.version>
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-release-plugin.version>2.3.2</maven-release-plugin.version>
-		<maven-license-plugin.version>1.10.b1</maven-license-plugin.version>
+		<mycila-maven-license-plugin.version>1.10.b1</mycila-maven-license-plugin.version>
 
 		<header.basedir>${project.basedir}</header.basedir>
 	</properties>
@@ -207,7 +207,7 @@
 				<plugin>
 					<groupId>com.mycila.maven-license-plugin</groupId>
 					<artifactId>maven-license-plugin</artifactId>
-					<version>${maven-license-plugin.version}</version>
+					<version>${mycila-maven-license-plugin.version}</version>
 					<configuration>
 						<header>${header.basedir}/src/etc/header.txt</header>
 						<strictCheck>false</strictCheck>

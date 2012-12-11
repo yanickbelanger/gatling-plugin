@@ -15,7 +15,6 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.model.Condition;
 import com.excilys.ebi.gatling.jenkins.model.Simulation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +23,6 @@ import hudson.FilePath;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 public class SimulationReport {
 
@@ -57,42 +55,8 @@ public class SimulationReport {
 		return new File(files[0].getRemote());
 	}
 
-	public boolean hasFailConditions() {
-		return !simulation.getFailConditions().isEmpty();
-	}
-
-	public boolean hasUnstableConditions() {
-		return !simulation.getUnstableConditions().isEmpty();
-	}
-
-	public boolean isBuildFailed() {
-		for (Condition condition : simulation.getFailConditions()) {
-			if (!condition.isFulfilledBy(globalReport)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isBuildUnstable() {
-		for (Condition condition : simulation.getUnstableConditions()) {
-			if (!condition.isFulfilledBy(globalReport)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public String getSimulationPath() {
 		return simulation.getName();
-	}
-
-	public List<Condition> getFailConditions() {
-		return simulation.getFailConditions();
-	}
-
-	public List<Condition> getUnstableConditions() {
-		return simulation.getUnstableConditions();
 	}
 
 	public RequestReport getGlobalReport() {

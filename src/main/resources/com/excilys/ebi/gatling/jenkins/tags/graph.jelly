@@ -23,7 +23,7 @@
 		</st:attribute>
 
 	</st:documentation>
-	<div id="${attrs.id}" style="width:200 ;height:500;">
+	<div id="${attrs.id}" style="width: ${attrs.width};height: ${attrs.height};">
 		<script type="text/javascript" language="javascript">
 			$$(document).ready(function () {
 				var plot1 = $$.jqplot('${attrs.id}', ${attrs.data}, {
