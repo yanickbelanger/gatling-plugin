@@ -6,12 +6,11 @@
 		<version>1.491</version>
 	</parent>
 
-	<groupId>com.excilys.ebi.gatling.jenkins</groupId>
-	<artifactId>gatling-jenkins-plugin</artifactId>
+	<artifactId>gatling</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	<name>Gatling Jenkins Plugin</name>
-	<url>http://gatling-tool.org</url>
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/Gatling+Plugin</url>
 
 	<licenses>
 		<license>
@@ -22,9 +21,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git@github.com:excilys/gatling-jenkins-plugin.git</connection>
-		<developerConnection>scm:git:git@github.com:excilys/gatling-jenkins-plugin.git</developerConnection>
-		<url>https://github.com/excilys/gatling-jenkins-plugin</url>
+		<connection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</developerConnection>
+		<url>https://github.com/jenkinsci/gatling-plugin</url>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -42,7 +41,8 @@
 			<organization>eBusiness Information, Excilys Group</organization>
 		</developer>
 		<developer>
-			<id>pdalpra@excilys.com</id>
+			<id>pdalpra</id>
+			<email>pdalpra@excilys.com</email>
 			<name>Pierre Dal-Pra</name>
 			<organization>eBusiness Information, Excilys Group</organization>
 		</developer>
