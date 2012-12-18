@@ -16,7 +16,7 @@
 package com.excilys.ebi.gatling.jenkins;
 
 public interface PluginConstants {
-	String ICON_URL = "/plugin/gatling-jenkins-plugin/img/logo.png";
+	String ICON_URL = "/plugin/gatling/img/logo.png";
 	String DISPLAY_NAME = "Gatling";
 	String URL_NAME = "gatling";
 
