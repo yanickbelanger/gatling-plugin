@@ -7,7 +7,7 @@
 	</parent>
 
 	<artifactId>gatling</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>hpi</packaging>
 	<name>Gatling Jenkins Plugin</name>
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Gatling+Plugin</url>
@@ -24,7 +24,7 @@
 		<connection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/gatling-plugin</url>
-		<tag>HEAD</tag>
+		<tag>1.0.0</tag>
 	</scm>
 
 	<developers>
@@ -40,12 +40,12 @@
 			<organization>eBusiness Information, Excilys Group</organization>
 		</developer>
 		<developer>
-			<id>blemale@excilys.com></id>
+			<id>blemale@excilys.com&gt;</id>
 			<name>Bastien Lemale</name>
 			<organization>eBusiness Information, Excilys Group</organization>
 		</developer>
 		<developer>
-			<id>gcoutant@excilys.com></id>
+			<id>gcoutant@excilys.com&gt;</id>
 			<name>Grégory Coutant</name>
 			<organization>eBusiness Information, Excilys Group</organization>
 		</developer>
