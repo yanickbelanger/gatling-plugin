@@ -24,7 +24,7 @@
 		<connection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:jenkinsci/gatling-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/gatling-plugin</url>
-		<tag>1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
