@@ -70,8 +70,11 @@ public class GatlingPublisher extends Recorder {
 	private FilePath saveFullReport(FilePath workspace, File rootDir, String simulationName) throws IOException, InterruptedException {
 		FilePath[] files = workspace.list("**/" + simulationName + "*/index.html");
 
-		if(files.length != 1) {
-			throw new IllegalArgumentException("Could not find a Gatling report, exiting.");
+
+		if(files.length == 0) {
+			throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
+		} else if(files.length != 1) {
+			throw new IllegalArgumentException("Found more than one Gatling report in results folder, make sure results folder is cleared between two builds.");
 		}
 
 		FilePath parent = files[0].getParent();
