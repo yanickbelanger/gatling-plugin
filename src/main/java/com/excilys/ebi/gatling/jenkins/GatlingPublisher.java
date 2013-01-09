@@ -15,7 +15,6 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -34,28 +33,36 @@ import java.io.IOException;
 
 public class GatlingPublisher extends Recorder {
 
-	private final Simulation simulation;
+	private final Boolean enabled;
+	private String simulation;
+
+
+	@DataBoundConstructor
+	public GatlingPublisher(Boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir(), simulation.getName());
+		if(!enabled) return true;
+
+		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir());
 
 		SimulationReport report = new SimulationReport(reportDirectory, simulation);
 		report.readStatsFile();
 
-		GatlingBuildAction action = new GatlingBuildAction(build, simulation.getName(), report.getGlobalReport(), reportDirectory);
+		GatlingBuildAction action = new GatlingBuildAction(build, simulation, report.getGlobalReport(), reportDirectory);
 
 		build.addAction(action);
 		return true;
 	}
 
-	@DataBoundConstructor
-	public GatlingPublisher(Simulation simulation) {
-		this.simulation = simulation;
+	public String getSimulation() {
+		return simulation;
 	}
 
-	public Simulation getSimulation() {
-		return simulation;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
@@ -67,9 +74,8 @@ public class GatlingPublisher extends Recorder {
 		return new GatlingProjectAction(project);
 	}
 
-	private FilePath saveFullReport(FilePath workspace, File rootDir, String simulationName) throws IOException, InterruptedException {
-		FilePath[] files = workspace.list("**/" + simulationName + "*/index.html");
-
+	private FilePath saveFullReport(FilePath workspace, File rootDir) throws IOException, InterruptedException {
+		FilePath[] files = workspace.list("**/simulation.log");
 
 		if(files.length == 0) {
 			throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
@@ -78,12 +84,13 @@ public class GatlingPublisher extends Recorder {
 		}
 
 		FilePath parent = files[0].getParent();
-
+		String name = parent.getName();
 		File allSimulationsDirectory = new File(rootDir, "simulations");
 		if (!allSimulationsDirectory.exists())
 			allSimulationsDirectory.mkdir();
-
-		File simulationDirectory = new File(allSimulationsDirectory, simulationName);
+		int dashIndex = name.lastIndexOf('-');
+		simulation = name.substring(0,dashIndex);
+		File simulationDirectory = new File(allSimulationsDirectory, name);
 		simulationDirectory.mkdir();
 
 		FilePath reportDirectory = new FilePath(simulationDirectory);

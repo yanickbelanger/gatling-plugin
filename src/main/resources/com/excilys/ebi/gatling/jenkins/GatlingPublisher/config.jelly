@@ -1,4 +1,5 @@
-<j:jelly xmlns:j="jelly:core"
-         xmlns:f="/lib/form">
-	<f:property field="simulation"/>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+	<f:entry>
+		<f:checkbox field="enabled" default="true" value="${instance.enabled}" title="${%Enabled}"/>
+	</f:entry>
 </j:jelly>

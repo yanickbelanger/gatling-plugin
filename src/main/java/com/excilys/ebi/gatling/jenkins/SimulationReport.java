@@ -15,7 +15,6 @@
  */
 package com.excilys.ebi.gatling.jenkins;
 
-import com.excilys.ebi.gatling.jenkins.model.Simulation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.FilePath;
@@ -32,9 +31,9 @@ public class SimulationReport {
 
 	private RequestReport globalReport;
 
-	private final Simulation simulation;
+	private final String simulation;
 
-	public SimulationReport(FilePath reportDirectory, Simulation simulation) {
+	public SimulationReport(FilePath reportDirectory, String simulation) {
 		this.reportDirectory = reportDirectory;
 		this.simulation = simulation;
 	}
@@ -50,13 +49,13 @@ public class SimulationReport {
 		FilePath[] files = reportDirectory.list(STATS_FILE_PATTERN);
 
 		if (files.length == 0)
-			throw new FileNotFoundException("Unable to locate the simulation results for " + simulation.getName());
+			throw new FileNotFoundException("Unable to locate the simulation results for " + simulation);
 
 		return new File(files[0].getRemote());
 	}
 
 	public String getSimulationPath() {
-		return simulation.getName();
+		return simulation;
 	}
 
 	public RequestReport getGlobalReport() {
