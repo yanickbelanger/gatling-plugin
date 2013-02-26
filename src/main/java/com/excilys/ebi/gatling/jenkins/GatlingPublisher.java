@@ -30,6 +30,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class GatlingPublisher extends Recorder {
 
@@ -44,8 +45,19 @@ public class GatlingPublisher extends Recorder {
 
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-		if(!enabled) return true;
+		PrintStream logger = listener.getLogger();
 
+		if(enabled == null) {
+			logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
+			logger.println("Please make sure simulation tracking is enabled in your build configuration !");
+			return true;
+		}
+		if(!enabled) {
+			logger.println("Simulation tracking disabled, reports were not archived.");
+			return true;
+		}
+
+		logger.println("Archiving Gatling reports...");
 		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir());
 
 		SimulationReport report = new SimulationReport(reportDirectory, simulation);
