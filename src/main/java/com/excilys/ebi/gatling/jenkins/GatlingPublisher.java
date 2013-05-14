@@ -37,9 +37,8 @@ import java.util.List;
 public class GatlingPublisher extends Recorder {
 
 	private final Boolean enabled;
-	private String simulation;
-	private long lastReportTimestamp;
 	private AbstractProject<?, ?> project;
+    private AbstractBuild<?, ?> build;
 	private PrintStream logger;
 
 
@@ -50,6 +49,7 @@ public class GatlingPublisher extends Recorder {
 
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+        this.build = build;
 		logger = listener.getLogger();
 		if (enabled == null) {
 			logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
@@ -61,29 +61,19 @@ public class GatlingPublisher extends Recorder {
 			return true;
 		}
 
-		// Find the timestamp of the last archived simulation, not persisted upon restart
-		if (lastReportTimestamp == 0) {
-			lastReportTimestamp = findLastReportTimeStamp();
-		}
-
 		logger.println("Archiving Gatling reports...");
-		FilePath reportDirectory = saveFullReport(build.getWorkspace(), build.getRootDir());
-		if (reportDirectory == null) {
+        List<BuildSimulation> sims = saveFullReports(build.getWorkspace(), build.getRootDir());
+        if (sims.size() == 0) {
 			logger.println("No newer Gatling reports to archive.");
 			return true;
 		}
 
-		SimulationReport report = new SimulationReport(reportDirectory, simulation);
-		report.readStatsFile();
+        GatlingBuildAction action = new GatlingBuildAction(build, sims);
 
-		GatlingBuildAction action = new GatlingBuildAction(build, simulation, report.getGlobalReport(), reportDirectory);
+        System.out.println("adding gatling build action to build: " + action);
+        build.addAction(action);
 
-		build.addAction(action);
-		return true;
-	}
-
-	public String getSimulation() {
-		return simulation;
+        return true;
 	}
 
 	public boolean isEnabled() {
@@ -100,7 +90,7 @@ public class GatlingPublisher extends Recorder {
 		return new GatlingProjectAction(project);
 	}
 
-	private FilePath saveFullReport(FilePath workspace, File rootDir) throws IOException, InterruptedException {
+    private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException, InterruptedException {
 		FilePath[] files = workspace.list("**/global_stats.json");
 		List<FilePath> reportFolders = new ArrayList<FilePath>();
 
@@ -113,63 +103,56 @@ public class GatlingPublisher extends Recorder {
 			reportFolders.add(file.getParent().getParent());
 		}
 
-		FilePath reportToArchive = selectReport(reportFolders);
+        List<FilePath> reportsToArchive = selectReports(reportFolders);
 
 		// If the most recent report has already been archived, there's nothing else to do
-		if (reportToArchive == null) {
+        if (reportsToArchive.size() == 0) {
 			return null;
 		}
 
-		String name = reportToArchive.getName();
-		File allSimulationsDirectory = new File(rootDir, "simulations");
-		if (!allSimulationsDirectory.exists())
-			allSimulationsDirectory.mkdir();
-		int dashIndex = name.lastIndexOf('-');
-		simulation = name.substring(0, dashIndex);
-		File simulationDirectory = new File(allSimulationsDirectory, name);
-		simulationDirectory.mkdir();
 
-		FilePath reportDirectory = new FilePath(simulationDirectory);
+        List<BuildSimulation> simsToArchive = new ArrayList<BuildSimulation>();
 
-		reportToArchive.copyRecursiveTo(reportDirectory);
 
-		// Report was successfully archived, update the timestamp
-		lastReportTimestamp = getTimestampFromFolderName(name);
+        for (FilePath reportToArchive : reportsToArchive) {
+            String name = reportToArchive.getName();
+            File allSimulationsDirectory = new File(rootDir, "simulations");
+            if (!allSimulationsDirectory.exists())
+                allSimulationsDirectory.mkdir();
+            int dashIndex = name.lastIndexOf('-');
+            String simulation = name.substring(0, dashIndex);
+            File simulationDirectory = new File(allSimulationsDirectory, name);
+            simulationDirectory.mkdir();
 
-		return reportDirectory;
+            FilePath reportDirectory = new FilePath(simulationDirectory);
+
+            reportToArchive.copyRecursiveTo(reportDirectory);
+
+            SimulationReport report = new SimulationReport(reportDirectory, simulation);
+            report.readStatsFile();
+            BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+
+            simsToArchive.add(sim);
+        }
+
+
+		return simsToArchive;
 	}
 
-	private FilePath selectReport(List<FilePath> reportFolders) {
-		FilePath lastReport = reportFolders.get(0);
-		long mostRecentTimestamp = getTimestampFromFolderName(lastReport.getName());
+	private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
+        logger.println("Build start time: " + build.getStartTimeInMillis());
+        logger.println("Searching for gatling reports created after this start time.");
+        long buildStartTime = build.getStartTimeInMillis();
+        List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
 		for (FilePath reportFolder : reportFolders) {
-			long reportTimestamp = getTimestampFromFolderName(reportFolder.getName());
-			if (reportTimestamp > mostRecentTimestamp) {
-				lastReport = reportFolder;
-				mostRecentTimestamp = reportTimestamp;
-			}
+            long reportLastMod = reportFolder.lastModified();
+            logger.println("report '" + reportFolder.getName() + "' has timestamp '" + reportLastMod +"'");
+            if (reportLastMod > buildStartTime) {
+                logger.println("report is more recent than build start time, adding.");
+                reportsFromThisBuild.add(reportFolder);
+            }
 		}
-		return mostRecentTimestamp > lastReportTimestamp ? lastReport : null;
-	}
-
-	private long findLastReportTimeStamp() {
-		long lastTimestamp = 0L;
-		for (AbstractBuild<?, ?> build : project.getBuilds()) {
-			File allSimulationsDirectory = new File(build.getRootDir(), "simulations");
-			// Is there a archived report for this build ?
-			if (allSimulationsDirectory.exists()) {
-				// There should be only the report folder
-				String reportFolderName = (allSimulationsDirectory.listFiles()[0]).getName();
-				long currentTimestamp = getTimestampFromFolderName(reportFolderName);
-				lastTimestamp = Math.max(lastTimestamp, currentTimestamp);
-			}
-		}
-		return lastTimestamp;
-	}
-
-	private long getTimestampFromFolderName(String folderName) {
-		int dashIndex = folderName.lastIndexOf('-');
-		return Long.parseLong(folderName.substring(dashIndex + 1, folderName.length()));
+        return reportsFromThisBuild;
 	}
 
 	@Extension
