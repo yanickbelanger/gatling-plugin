@@ -70,7 +70,6 @@ public class GatlingPublisher extends Recorder {
 
         GatlingBuildAction action = new GatlingBuildAction(build, sims);
 
-        System.out.println("adding gatling build action to build: " + action);
         build.addAction(action);
 
         return true;
@@ -105,20 +104,20 @@ public class GatlingPublisher extends Recorder {
 
         List<FilePath> reportsToArchive = selectReports(reportFolders);
 
-		// If the most recent report has already been archived, there's nothing else to do
-        if (reportsToArchive.size() == 0) {
-			return null;
-		}
-
 
         List<BuildSimulation> simsToArchive = new ArrayList<BuildSimulation>();
 
+		// If the most recent report has already been archived, there's nothing else to do
+        if (reportsToArchive.size() == 0) {
+			return simsToArchive;
+		}
+
+        File allSimulationsDirectory = new File(rootDir, "simulations");
+        if (!allSimulationsDirectory.exists())
+            allSimulationsDirectory.mkdir();
 
         for (FilePath reportToArchive : reportsToArchive) {
             String name = reportToArchive.getName();
-            File allSimulationsDirectory = new File(rootDir, "simulations");
-            if (!allSimulationsDirectory.exists())
-                allSimulationsDirectory.mkdir();
             int dashIndex = name.lastIndexOf('-');
             String simulation = name.substring(0, dashIndex);
             File simulationDirectory = new File(allSimulationsDirectory, name);
@@ -140,15 +139,12 @@ public class GatlingPublisher extends Recorder {
 	}
 
 	private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
-        logger.println("Build start time: " + build.getStartTimeInMillis());
-        logger.println("Searching for gatling reports created after this start time.");
         long buildStartTime = build.getStartTimeInMillis();
         List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
 		for (FilePath reportFolder : reportFolders) {
             long reportLastMod = reportFolder.lastModified();
-            logger.println("report '" + reportFolder.getName() + "' has timestamp '" + reportLastMod +"'");
             if (reportLastMod > buildStartTime) {
-                logger.println("report is more recent than build start time, adding.");
+                logger.println("Adding report '" + reportFolder.getName() + "'");
                 reportsFromThisBuild.add(reportFolder);
             }
 		}
