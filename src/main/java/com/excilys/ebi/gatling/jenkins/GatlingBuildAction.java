@@ -19,35 +19,28 @@ import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
 
 import hudson.model.Action;
 import hudson.model.AbstractBuild;
-import hudson.model.DirectoryBrowserSupport;
-import org.kohsuke.stapler.ForwardToView;
-import org.kohsuke.stapler.RequestImpl;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.List;
 
 public class GatlingBuildAction implements Action {
 
 	private final AbstractBuild<?, ?> build;
-    private final List<BuildSimulation> simulations;
+	private final List<BuildSimulation> simulations;
 
-public GatlingBuildAction(AbstractBuild<?, ?> build, List<BuildSimulation> sims) {
+	public GatlingBuildAction(AbstractBuild<?, ?> build, List<BuildSimulation> sims) {
 		this.build = build;
-        this.simulations = sims;
+		this.simulations = sims;
 	}
 
 	public AbstractBuild<?, ?> getBuild() {
 		return build;
 	}
 
-    public List<BuildSimulation> getSimulations() {
-        return simulations;
-    }
+	public List<BuildSimulation> getSimulations() {
+		return simulations;
+	}
 
-    public String getIconFileName() {
+	public String getIconFileName() {
 		return ICON_URL;
 	}
 
@@ -59,33 +52,31 @@ public GatlingBuildAction(AbstractBuild<?, ?> build, List<BuildSimulation> sims)
 		return URL_NAME;
 	}
 
-    /**
-     * This method is called dynamically for any HTTP request to our plugin's
-     * URL followed by "/report/SomeSimulationName".
-     *
-     * It returns a new instance of {@link ReportRenderer}, which contains
-     * the actual logic for rendering a report.
-     *
-     * @param simName
-     */
-    public ReportRenderer getReport(String simName) {
-        return new ReportRenderer(this, getSimulation(simName));
-    }
+	/**
+	 * This method is called dynamically for any HTTP request to our plugin's
+	 * URL followed by "/report/SomeSimulationName".
+	 * 
+	 * It returns a new instance of {@link ReportRenderer}, which contains the
+	 * actual logic for rendering a report.
+	 * 
+	 * @param simName
+	 */
+	public ReportRenderer getReport(String simName) {
+		return new ReportRenderer(this, getSimulation(simName));
+	}
 
+	public String getReportURL(String simName) {
+		return new StringBuilder().append(URL_NAME).append("/report/").append(simName).toString();
+	}
 
-    public String getReportURL(String simName) {
-        return new StringBuilder().append(URL_NAME).append("/report/").append(simName).toString();
-    }
-
-
-    private BuildSimulation getSimulation(String simulationName) {
-        // this isn't the most efficient implementation in the world :)
-        for (BuildSimulation sim : this.getSimulations()) {
-            if (sim.getSimulationName().equals(simulationName)) {
-                return sim;
-            }
-        }
-        return null;
-    }
+	private BuildSimulation getSimulation(String simulationName) {
+		// this isn't the most efficient implementation in the world :)
+		for (BuildSimulation sim : this.getSimulations()) {
+			if (sim.getSimulationName().equals(simulationName)) {
+				return sim;
+			}
+		}
+		return null;
+	}
 
 }

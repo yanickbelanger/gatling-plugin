@@ -34,10 +34,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class GatlingPublisher extends Recorder {
 
 	private final Boolean enabled;
-	private AbstractProject<?, ?> project;
     private AbstractBuild<?, ?> build;
 	private PrintStream logger;
 
@@ -85,7 +85,6 @@ public class GatlingPublisher extends Recorder {
 
 	@Override
 	public Action getProjectAction(AbstractProject<?, ?> project) {
-		this.project = project;
 		return new GatlingProjectAction(project);
 	}
 
@@ -155,6 +154,7 @@ public class GatlingPublisher extends Recorder {
 	public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
 		@Override
+		@SuppressWarnings("rawtypes")
 		public boolean isApplicable(Class<? extends AbstractProject> aClass) {
 			return true;
 		}
