@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 eBusiness Information, Groupe Excilys (www.excilys.com)
+ * Copyright 2011-2014 eBusiness Information, Groupe Excilys (www.excilys.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.excilys.ebi.gatling.jenkins;
+package io.gatling.jenkins;
 
-import static com.excilys.ebi.gatling.jenkins.PluginConstants.*;
+import static io.gatling.jenkins.PluginConstants.*;
 
 import hudson.model.Action;
 import hudson.model.AbstractBuild;

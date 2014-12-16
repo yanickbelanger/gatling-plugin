@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 eBusiness Information, Groupe Excilys (www.excilys.com)
+ * Copyright 2011-2014 eBusiness Information, Groupe Excilys (www.excilys.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.excilys.ebi.gatling.jenkins;
+package io.gatling.jenkins;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.FilePath;
 
@@ -40,6 +42,7 @@ public class SimulationReport {
 
 	public void readStatsFile() throws IOException, InterruptedException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		File jsonFile = locateStatsFile();
 		globalReport = mapper.readValue(jsonFile, new TypeReference<RequestReport>() {
 		});

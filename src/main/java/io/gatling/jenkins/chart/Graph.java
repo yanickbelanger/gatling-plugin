@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 eBusiness Information, Groupe Excilys (www.excilys.com)
+ * Copyright 2011-2014 eBusiness Information, Groupe Excilys (www.excilys.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.excilys.ebi.gatling.jenkins.chart;
+package io.gatling.jenkins.chart;
 
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -24,9 +24,9 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.excilys.ebi.gatling.jenkins.GatlingBuildAction;
-import com.excilys.ebi.gatling.jenkins.BuildSimulation;
-import com.excilys.ebi.gatling.jenkins.RequestReport;
+import io.gatling.jenkins.GatlingBuildAction;
+import io.gatling.jenkins.BuildSimulation;
+import io.gatling.jenkins.RequestReport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Graph<Y extends Number> {

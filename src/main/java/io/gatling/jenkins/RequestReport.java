@@ -1,5 +1,5 @@
 /**
- * Copyright 2011-2012 eBusiness Information, Groupe Excilys (www.excilys.com)
+ * Copyright 2011-2014 eBusiness Information, Groupe Excilys (www.excilys.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.excilys.ebi.gatling.jenkins;
+package io.gatling.jenkins;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,9 +26,13 @@ public class RequestReport {
 	private Statistics meanResponseTime;
 	private Statistics standardDeviation;
 	@JsonProperty("percentiles1")
-	private Statistics percentiles95;
+	private Statistics percentiles1;
 	@JsonProperty("percentiles2")
-	private Statistics percentiles99;
+	private Statistics percentiles2;
+	@JsonProperty("percentiles3")
+	private Statistics percentiles3;
+	@JsonProperty("percentiles4")
+	private Statistics percentiles4;
 	private Statistics meanNumberOfRequestsPerSecond;
 	private ResponseTimeGroup group1;
 	private ResponseTimeGroup group2;
@@ -83,20 +87,36 @@ public class RequestReport {
 		this.standardDeviation = standardDeviation;
 	}
 
-	public Statistics getPercentiles95() {
-		return percentiles95;
+	public Statistics getPercentiles1() {
+		return percentiles1;
 	}
 
-	public void setPercentiles95(Statistics percentiles95) {
-		this.percentiles95 = percentiles95;
+	public void setPercentiles1(Statistics percentiles95) {
+		this.percentiles1 = percentiles1;
 	}
 
-	public Statistics getPercentiles99() {
-		return percentiles99;
+	public Statistics getPercentiles2() {
+		return percentiles2;
 	}
 
-	public void setPercentiles99(Statistics percentiles99) {
-		this.percentiles99 = percentiles99;
+	public void setPercentiles2(Statistics percentiles2) {
+		this.percentiles2 = percentiles2;
+	}
+
+	public Statistics getPercentiles3() {
+		return percentiles3;
+	}
+
+	public void setPercentiles3(Statistics percentiles3) {
+		this.percentiles3 = percentiles3;
+	}
+
+	public Statistics getPercentiles4() {
+		return percentiles4;
+	}
+
+	public void setPercentiles4(Statistics percentiles4) {
+		this.percentiles4 = percentiles4;
 	}
 
 	public Statistics getMeanNumberOfRequestsPerSecond() {
