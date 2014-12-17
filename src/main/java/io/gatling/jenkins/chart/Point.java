@@ -23,31 +23,31 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 public class Point<X extends Number, Y extends Number> implements JsonSerializable {
-	private final X x;
-	private final Y y;
+  private final X x;
+  private final Y y;
 
-	public Point(X x, Y y) {
-		this.x = x;
-		this.y = y;
-	}
+  public Point(X x, Y y) {
+    this.x = x;
+    this.y = y;
+  }
 
-	public X getX() {
-		return x;
-	}
+  public X getX() {
+    return x;
+  }
 
-	public Y getY() {
-		return y;
-	}
+  public Y getY() {
+    return y;
+  }
 
-	public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
-		jgen.writeStartArray();
-		jgen.writeObject(x);
-		jgen.writeObject(y);
-		jgen.writeEndArray();
-	}
+  public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    jgen.writeStartArray();
+    jgen.writeObject(x);
+    jgen.writeObject(y);
+    jgen.writeEndArray();
+  }
 
-	public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) {
-		throw new UnsupportedOperationException();
-	}
+  public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) {
+    throw new UnsupportedOperationException();
+  }
 
 }

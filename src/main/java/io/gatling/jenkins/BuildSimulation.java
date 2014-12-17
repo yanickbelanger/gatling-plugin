@@ -24,25 +24,25 @@ import hudson.FilePath;
  * instance of {@link GatlingBuildAction}.
  */
 public class BuildSimulation {
-    private final String simulationName;
-    private final RequestReport requestReport;
-    private final FilePath simulationDirectory;
+  private final String simulationName;
+  private final RequestReport requestReport;
+  private final FilePath simulationDirectory;
 
-    public BuildSimulation(String simulationName, RequestReport requestReport, FilePath simulationDirectory) {
-        this.simulationName = simulationName;
-        this.requestReport = requestReport;
-        this.simulationDirectory = simulationDirectory;
-    }
+  public BuildSimulation(String simulationName, RequestReport requestReport, FilePath simulationDirectory) {
+    this.simulationName = simulationName;
+    this.requestReport = requestReport;
+    this.simulationDirectory = simulationDirectory;
+  }
 
-    public String getSimulationName() {
-        return simulationName;
-    }
+  public String getSimulationName() {
+    return simulationName;
+  }
 
-    public RequestReport getRequestReport() {
-        return requestReport;
-    }
+  public RequestReport getRequestReport() {
+    return requestReport;
+  }
 
-    public FilePath getSimulationDirectory() {
-        return simulationDirectory;
-    }
+  public FilePath getSimulationDirectory() {
+    return simulationDirectory;
+  }
 }

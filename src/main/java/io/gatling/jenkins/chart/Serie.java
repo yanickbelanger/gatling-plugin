@@ -25,17 +25,17 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 public class Serie<X extends Number, Y extends Number> implements JsonSerializable {
-	private final List<Point<X, Y>> points = new ArrayList<Point<X, Y>>();
+  private final List<Point<X, Y>> points = new ArrayList<Point<X, Y>>();
 
-	public void addPoint(X x, Y y) {
-		points.add(new Point<X, Y>(x, y));
-	}
+  public void addPoint(X x, Y y) {
+    points.add(new Point<X, Y>(x, y));
+  }
 
-	public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
-		jgen.writeObject(points);
-	}
+  public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    jgen.writeObject(points);
+  }
 
-	public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) {
-		throw new UnsupportedOperationException();
-	}
+  public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) {
+    throw new UnsupportedOperationException();
+  }
 }

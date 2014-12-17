@@ -23,44 +23,44 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 public class SerieName implements JsonSerializable, Comparable<SerieName> {
-	final String name;
+  final String name;
 
-	public SerieName(String name) {
-		this.name = name;
-	}
+  public SerieName(String name) {
+    this.name = name;
+  }
 
-	public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
-		jgen.disable(JsonGenerator.Feature.QUOTE_FIELD_NAMES);
-		jgen.writeStartObject();
-		jgen.writeStringField("label", name);
-		jgen.writeEndObject();
-	}
+  public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    jgen.disable(JsonGenerator.Feature.QUOTE_FIELD_NAMES);
+    jgen.writeStartObject();
+    jgen.writeStringField("label", name);
+    jgen.writeEndObject();
+  }
 
-	public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException {
-		throw new UnsupportedOperationException();
-	}
+  public void serializeWithType(JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException {
+    throw new UnsupportedOperationException();
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+    if (o == null || getClass() != o.getClass())
+      return false;
 
-		SerieName serieName = (SerieName) o;
+    SerieName serieName = (SerieName) o;
 
-		if (name != null ? !name.equals(serieName.name) : serieName.name != null)
-			return false;
+    if (name != null ? !name.equals(serieName.name) : serieName.name != null)
+      return false;
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public int hashCode() {
-		return name != null ? name.hashCode() : 0;
-	}
+  @Override
+  public int hashCode() {
+    return name != null ? name.hashCode() : 0;
+  }
 
-	public int compareTo(SerieName o) {
-		return this.name.compareTo(o.name);
-	}
+  public int compareTo(SerieName o) {
+    return this.name.compareTo(o.name);
+  }
 }

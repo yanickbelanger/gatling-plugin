@@ -30,54 +30,54 @@ import io.gatling.jenkins.RequestReport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Graph<Y extends Number> {
-	private static final Logger LOGGER = Logger.getLogger(Graph.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(Graph.class.getName());
 
-	private final SortedMap<SerieName, Serie<Integer, Y>> series = new TreeMap<SerieName, Serie<Integer, Y>>();
+  private final SortedMap<SerieName, Serie<Integer, Y>> series = new TreeMap<SerieName, Serie<Integer, Y>>();
 
-	private final ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
-	public Graph(AbstractProject<?, ?> project, int maxBuildsToDisplay) {
-		int numberOfBuild = 0;
-		for (AbstractBuild<?, ?> build : project.getBuilds()) {
-			GatlingBuildAction action = build.getAction(GatlingBuildAction.class);
+  public Graph(AbstractProject<?, ?> project, int maxBuildsToDisplay) {
+    int numberOfBuild = 0;
+    for (AbstractBuild<?, ?> build : project.getBuilds()) {
+      GatlingBuildAction action = build.getAction(GatlingBuildAction.class);
 
-			if (action != null) {
-				numberOfBuild++;
-                for (BuildSimulation sim : action.getSimulations()) {
-				    SerieName name = new SerieName(sim.getSimulationName());
-				    if (!series.containsKey(name))
-					    series.put(name, new Serie<Integer, Y>());
+      if (action != null) {
+        numberOfBuild++;
+        for (BuildSimulation sim : action.getSimulations()) {
+          SerieName name = new SerieName(sim.getSimulationName());
+          if (!series.containsKey(name))
+            series.put(name, new Serie<Integer, Y>());
 
-				    series.get(name).addPoint(build.getNumber(), getValue(sim.getRequestReport()));
-                }
-			}
+          series.get(name).addPoint(build.getNumber(), getValue(sim.getRequestReport()));
+        }
+      }
 
-			if (numberOfBuild >= maxBuildsToDisplay)
-				break;
-		}
-	}
+      if (numberOfBuild >= maxBuildsToDisplay)
+        break;
+    }
+  }
 
-	public String getSeriesNamesJSON() {
-		String json = null;
+  public String getSeriesNamesJSON() {
+    String json = null;
 
-		try {
-			json = mapper.writeValueAsString(series.keySet());
-		} catch (IOException e) {
-			LOGGER.log(Level.INFO, e.getMessage(), e);
-		}
-		return json;
-	}
+    try {
+      json = mapper.writeValueAsString(series.keySet());
+    } catch (IOException e) {
+      LOGGER.log(Level.INFO, e.getMessage(), e);
+    }
+    return json;
+  }
 
-	public String getSeriesJSON() {
-		String json = null;
+  public String getSeriesJSON() {
+    String json = null;
 
-		try {
-			json = mapper.writeValueAsString(series.values());
-		} catch (IOException e) {
-			LOGGER.log(Level.INFO, e.getMessage(), e);
-		}
-		return json;
-	}
+    try {
+      json = mapper.writeValueAsString(series.values());
+    } catch (IOException e) {
+      LOGGER.log(Level.INFO, e.getMessage(), e);
+    }
+    return json;
+  }
 
-	protected abstract Y getValue(RequestReport requestReport);
+  protected abstract Y getValue(RequestReport requestReport);
 }

@@ -17,31 +17,31 @@ package io.gatling.jenkins;
 
 public class Statistics {
 
-	private long total;
-	private long ok;
-	private long ko;
+  private long total;
+  private long ok;
+  private long ko;
 
-	public long getTotal() {
-		return total;
-	}
+  public long getTotal() {
+    return total;
+  }
 
-	public void setTotal(long total) {
-		this.total = total;
-	}
+  public void setTotal(long total) {
+    this.total = total;
+  }
 
-	public long getOK() {
-		return ok;
-	}
+  public long getOK() {
+    return ok;
+  }
 
-	public void setOK(long ok) {
-		this.ok = ok;
-	}
+  public void setOK(long ok) {
+    this.ok = ok;
+  }
 
-	public long getKO() {
-		return ko;
-	}
+  public long getKO() {
+    return ko;
+  }
 
-	public void setKO(long ko) {
-		this.ko = ko;
-	}
+  public void setKO(long ko) {
+    this.ko = ko;
+  }
 }

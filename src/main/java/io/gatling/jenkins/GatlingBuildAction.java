@@ -24,59 +24,59 @@ import java.util.List;
 
 public class GatlingBuildAction implements Action {
 
-	private final AbstractBuild<?, ?> build;
-	private final List<BuildSimulation> simulations;
+  private final AbstractBuild<?, ?> build;
+  private final List<BuildSimulation> simulations;
 
-	public GatlingBuildAction(AbstractBuild<?, ?> build, List<BuildSimulation> sims) {
-		this.build = build;
-		this.simulations = sims;
-	}
+  public GatlingBuildAction(AbstractBuild<?, ?> build, List<BuildSimulation> sims) {
+    this.build = build;
+    this.simulations = sims;
+  }
 
-	public AbstractBuild<?, ?> getBuild() {
-		return build;
-	}
+  public AbstractBuild<?, ?> getBuild() {
+    return build;
+  }
 
-	public List<BuildSimulation> getSimulations() {
-		return simulations;
-	}
+  public List<BuildSimulation> getSimulations() {
+    return simulations;
+  }
 
-	public String getIconFileName() {
-		return ICON_URL;
-	}
+  public String getIconFileName() {
+    return ICON_URL;
+  }
 
-	public String getDisplayName() {
-		return DISPLAY_NAME;
-	}
+  public String getDisplayName() {
+    return DISPLAY_NAME;
+  }
 
-	public String getUrlName() {
-		return URL_NAME;
-	}
+  public String getUrlName() {
+    return URL_NAME;
+  }
 
-	/**
-	 * This method is called dynamically for any HTTP request to our plugin's
-	 * URL followed by "/report/SomeSimulationName".
-	 * 
-	 * It returns a new instance of {@link ReportRenderer}, which contains the
-	 * actual logic for rendering a report.
-	 * 
-	 * @param simName
-	 */
-	public ReportRenderer getReport(String simName) {
-		return new ReportRenderer(this, getSimulation(simName));
-	}
+  /**
+   * This method is called dynamically for any HTTP request to our plugin's
+   * URL followed by "/report/SomeSimulationName".
+   * <p/>
+   * It returns a new instance of {@link ReportRenderer}, which contains the
+   * actual logic for rendering a report.
+   *
+   * @param simName
+   */
+  public ReportRenderer getReport(String simName) {
+    return new ReportRenderer(this, getSimulation(simName));
+  }
 
-	public String getReportURL(String simName) {
-		return new StringBuilder().append(URL_NAME).append("/report/").append(simName).toString();
-	}
+  public String getReportURL(String simName) {
+    return new StringBuilder().append(URL_NAME).append("/report/").append(simName).toString();
+  }
 
-	private BuildSimulation getSimulation(String simulationName) {
-		// this isn't the most efficient implementation in the world :)
-		for (BuildSimulation sim : this.getSimulations()) {
-			if (sim.getSimulationName().equals(simulationName)) {
-				return sim;
-			}
-		}
-		return null;
-	}
+  private BuildSimulation getSimulation(String simulationName) {
+    // this isn't the most efficient implementation in the world :)
+    for (BuildSimulation sim : this.getSimulations()) {
+      if (sim.getSimulationName().equals(simulationName)) {
+        return sim;
+      }
+    }
+    return null;
+  }
 
 }

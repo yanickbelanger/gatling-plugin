@@ -27,41 +27,41 @@ import java.io.IOException;
 
 public class SimulationReport {
 
-	private final FilePath reportDirectory;
+  private final FilePath reportDirectory;
 
-	private static final String STATS_FILE_PATTERN = "**/global_stats.json";
+  private static final String STATS_FILE_PATTERN = "**/global_stats.json";
 
-	private RequestReport globalReport;
+  private RequestReport globalReport;
 
-	private final String simulation;
+  private final String simulation;
 
-	public SimulationReport(FilePath reportDirectory, String simulation) {
-		this.reportDirectory = reportDirectory;
-		this.simulation = simulation;
-	}
+  public SimulationReport(FilePath reportDirectory, String simulation) {
+    this.reportDirectory = reportDirectory;
+    this.simulation = simulation;
+  }
 
-	public void readStatsFile() throws IOException, InterruptedException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		File jsonFile = locateStatsFile();
-		globalReport = mapper.readValue(jsonFile, new TypeReference<RequestReport>() {
-		});
-	}
+  public void readStatsFile() throws IOException, InterruptedException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    File jsonFile = locateStatsFile();
+    globalReport = mapper.readValue(jsonFile, new TypeReference<RequestReport>() {
+    });
+  }
 
-	private File locateStatsFile() throws IOException, InterruptedException {
-		FilePath[] files = reportDirectory.list(STATS_FILE_PATTERN);
+  private File locateStatsFile() throws IOException, InterruptedException {
+    FilePath[] files = reportDirectory.list(STATS_FILE_PATTERN);
 
-		if (files.length == 0)
-			throw new FileNotFoundException("Unable to locate the simulation results for " + simulation);
+    if (files.length == 0)
+      throw new FileNotFoundException("Unable to locate the simulation results for " + simulation);
 
-		return new File(files[0].getRemote());
-	}
+    return new File(files[0].getRemote());
+  }
 
-	public String getSimulationPath() {
-		return simulation;
-	}
+  public String getSimulationPath() {
+    return simulation;
+  }
 
-	public RequestReport getGlobalReport() {
-		return globalReport;
-	}
+  public RequestReport getGlobalReport() {
+    return globalReport;
+  }
 }

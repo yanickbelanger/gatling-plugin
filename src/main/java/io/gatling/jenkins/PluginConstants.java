@@ -16,10 +16,10 @@
 package io.gatling.jenkins;
 
 public interface PluginConstants {
-	String ICON_URL = "/plugin/gatling/img/logo.png";
-	String DISPLAY_NAME = "Gatling";
-	String URL_NAME = "gatling";
+  String ICON_URL = "/plugin/gatling/img/logo.png";
+  String DISPLAY_NAME = "Gatling";
+  String URL_NAME = "gatling";
 
-	int MAX_BUILDS_TO_DISPLAY = 30;
-	int MAX_BUILDS_TO_DISPLAY_DASHBOARD = 15;
+  int MAX_BUILDS_TO_DISPLAY = 30;
+  int MAX_BUILDS_TO_DISPLAY_DASHBOARD = 15;
 }

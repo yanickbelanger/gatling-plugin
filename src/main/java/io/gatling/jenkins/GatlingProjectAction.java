@@ -16,6 +16,7 @@
 package io.gatling.jenkins;
 
 import static io.gatling.jenkins.PluginConstants.*;
+
 import hudson.model.Action;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -29,93 +30,93 @@ import io.gatling.jenkins.chart.Graph;
 
 public class GatlingProjectAction implements Action {
 
-	private final AbstractProject<?, ?> project;
+  private final AbstractProject<?, ?> project;
 
-	public GatlingProjectAction(AbstractProject<?, ?> project) {
-		this.project = project;
-	}
+  public GatlingProjectAction(AbstractProject<?, ?> project) {
+    this.project = project;
+  }
 
-	public String getIconFileName() {
-		return ICON_URL;
-	}
+  public String getIconFileName() {
+    return ICON_URL;
+  }
 
-	public String getDisplayName() {
-		return DISPLAY_NAME;
-	}
+  public String getDisplayName() {
+    return DISPLAY_NAME;
+  }
 
-	public String getUrlName() {
-		return URL_NAME;
-	}
+  public String getUrlName() {
+    return URL_NAME;
+  }
 
-	public AbstractProject<?, ?> getProject() {
-		return project;
-	}
+  public AbstractProject<?, ?> getProject() {
+    return project;
+  }
 
-	public boolean isVisible() {
-		for (AbstractBuild<?, ?> build : getProject().getBuilds()) {
-			GatlingBuildAction gatlingBuildAction = build.getAction(GatlingBuildAction.class);
-			if (gatlingBuildAction != null) {
-				return true;
-			}
-		}
-		return false;
-	}
+  public boolean isVisible() {
+    for (AbstractBuild<?, ?> build : getProject().getBuilds()) {
+      GatlingBuildAction gatlingBuildAction = build.getAction(GatlingBuildAction.class);
+      if (gatlingBuildAction != null) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-	public Graph<Long> getDashboardGraph() {
-		return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY_DASHBOARD) {
-			@Override
-			public Long getValue(RequestReport requestReport) {
-				return requestReport.getMeanResponseTime().getTotal();
-			}
-		};
-	}
+  public Graph<Long> getDashboardGraph() {
+    return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY_DASHBOARD) {
+      @Override
+      public Long getValue(RequestReport requestReport) {
+        return requestReport.getMeanResponseTime().getTotal();
+      }
+    };
+  }
 
-	public Graph<Long> getMeanResponseTimeGraph() {
-		return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
-			@Override
-			public Long getValue(RequestReport requestReport) {
-				return requestReport.getMeanResponseTime().getTotal();
-			}
-		};
-	}
+  public Graph<Long> getMeanResponseTimeGraph() {
+    return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
+      @Override
+      public Long getValue(RequestReport requestReport) {
+        return requestReport.getMeanResponseTime().getTotal();
+      }
+    };
+  }
 
-	public Graph<Long> getPercentileResponseTimeGraph() {
-		return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
-			@Override
-			public Long getValue(RequestReport requestReport) {
-				Statistics percentile95 = requestReport.getPercentiles3() != null ? requestReport.getPercentiles3() : requestReport.getPercentiles1();
-				return percentile95.getTotal();
-			}
-		};
-	}
+  public Graph<Long> getPercentileResponseTimeGraph() {
+    return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
+      @Override
+      public Long getValue(RequestReport requestReport) {
+        Statistics percentile95 = requestReport.getPercentiles3() != null ? requestReport.getPercentiles3() : requestReport.getPercentiles1();
+        return percentile95.getTotal();
+      }
+    };
+  }
 
-	public Graph<Long> getRequestKOPercentageGraph() {
-		return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
-			@Override
-			public Long getValue(RequestReport requestReport) {
-				return Math.round(requestReport.getNumberOfRequests().getKO() * 100.0 / requestReport.getNumberOfRequests().getTotal());
-			}
-		};
-	}
+  public Graph<Long> getRequestKOPercentageGraph() {
+    return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
+      @Override
+      public Long getValue(RequestReport requestReport) {
+        return Math.round(requestReport.getNumberOfRequests().getKO() * 100.0 / requestReport.getNumberOfRequests().getTotal());
+      }
+    };
+  }
 
-	public Map<AbstractBuild<?, ?>, List<String>> getReports() {
-		Map<AbstractBuild<?, ?>, List<String>> reports = new LinkedHashMap<AbstractBuild<?, ?>, List<String>>();
+  public Map<AbstractBuild<?, ?>, List<String>> getReports() {
+    Map<AbstractBuild<?, ?>, List<String>> reports = new LinkedHashMap<AbstractBuild<?, ?>, List<String>>();
 
-		for (AbstractBuild<?, ?> build : project.getBuilds()) {
-			GatlingBuildAction action = build.getAction(GatlingBuildAction.class);
-			if (action != null) {
-                List<String> simNames = new ArrayList<String>();
-                for (BuildSimulation sim : action.getSimulations()) {
-                    simNames.add(sim.getSimulationName());
-                }
-                reports.put(build, simNames);
-            }
-		}
+    for (AbstractBuild<?, ?> build : project.getBuilds()) {
+      GatlingBuildAction action = build.getAction(GatlingBuildAction.class);
+      if (action != null) {
+        List<String> simNames = new ArrayList<String>();
+        for (BuildSimulation sim : action.getSimulations()) {
+          simNames.add(sim.getSimulationName());
+        }
+        reports.put(build, simNames);
+      }
+    }
 
-		return reports;
-	}
+    return reports;
+  }
 
-	public String getReportURL(int build, String simName) {
-		return new StringBuilder().append(build).append("/").append(URL_NAME).append("/report/").append(simName).toString();
-	}
+  public String getReportURL(int build, String simName) {
+    return new StringBuilder().append(build).append("/").append(URL_NAME).append("/report/").append(simName).toString();
+  }
 }
