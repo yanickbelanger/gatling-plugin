@@ -25,6 +25,8 @@ public class RequestReport {
   private Statistics maxResponseTime;
   private Statistics meanResponseTime;
   private Statistics standardDeviation;
+  private Statistics percentiles95;
+  private Statistics percentiles99;
   @JsonProperty("percentiles1")
   private Statistics percentiles1;
   @JsonProperty("percentiles2")
@@ -91,7 +93,7 @@ public class RequestReport {
     return percentiles1;
   }
 
-  public void setPercentiles1(Statistics percentiles95) {
+  public void setPercentiles1(Statistics percentiles1) {
     this.percentiles1 = percentiles1;
   }
 
@@ -157,5 +159,16 @@ public class RequestReport {
 
   public void setGroup4(ResponseTimeGroup group4) {
     this.group4 = group4;
+  }
+
+  private Object readResolve() {
+    // Migration from 1.0.3 to 1.0.4
+    if(percentiles95 != null) {
+      percentiles1 = percentiles95;
+    }
+    if(percentiles99 != null) {
+      percentiles2 = percentiles99;
+    }
+    return this;
   }
 }

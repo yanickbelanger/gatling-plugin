@@ -18,10 +18,13 @@ package io.gatling.jenkins;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.init.Initializer;
+import hudson.init.InitMilestone;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.Items;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -163,6 +166,12 @@ public class GatlingPublisher extends Recorder {
     public String getDisplayName() {
       return Messages.Title();
     }
+
+      @Initializer(before=InitMilestone.PLUGINS_STARTED)
+      public static void addAliases() {
+         Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingPublisher", GatlingPublisher.class);
+         Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingBuildAction", GatlingBuildAction.class);
+      }
   }
 
 

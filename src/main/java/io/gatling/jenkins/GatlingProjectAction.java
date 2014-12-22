@@ -84,8 +84,7 @@ public class GatlingProjectAction implements Action {
     return new Graph<Long>(project, MAX_BUILDS_TO_DISPLAY) {
       @Override
       public Long getValue(RequestReport requestReport) {
-        Statistics percentile95 = requestReport.getPercentiles3() != null ? requestReport.getPercentiles3() : requestReport.getPercentiles1();
-        return percentile95.getTotal();
+        return requestReport.getPercentiles1().getTotal();
       }
     };
   }
