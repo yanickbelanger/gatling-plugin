@@ -35,13 +35,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class GatlingPublisher extends Recorder {
 
   private final Boolean enabled;
-    private AbstractBuild<?, ?> build;
+  private AbstractBuild<?, ?> build;
   private PrintStream logger;
 
 
@@ -52,7 +53,7 @@ public class GatlingPublisher extends Recorder {
 
   @Override
   public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-        this.build = build;
+    this.build = build;
     logger = listener.getLogger();
     if (enabled == null) {
       logger.println("Cannot check Gatling simulation tracking status, reports won't be archived.");
@@ -65,17 +66,17 @@ public class GatlingPublisher extends Recorder {
     }
 
     logger.println("Archiving Gatling reports...");
-        List<BuildSimulation> sims = saveFullReports(build.getWorkspace(), build.getRootDir());
-        if (sims.size() == 0) {
+    List<BuildSimulation> sims = saveFullReports(build.getWorkspace(), build.getRootDir());
+    if (sims.isEmpty()) {
       logger.println("No newer Gatling reports to archive.");
       return true;
     }
 
-        GatlingBuildAction action = new GatlingBuildAction(build, sims);
+    GatlingBuildAction action = new GatlingBuildAction(build, sims);
 
-        build.addAction(action);
+    build.addAction(action);
 
-        return true;
+    return true;
   }
 
   public boolean isEnabled() {
@@ -91,12 +92,13 @@ public class GatlingPublisher extends Recorder {
     return new GatlingProjectAction(project);
   }
 
-    private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException, InterruptedException {
+  private List<BuildSimulation> saveFullReports(FilePath workspace, File rootDir) throws IOException, InterruptedException {
     FilePath[] files = workspace.list("**/global_stats.json");
     List<FilePath> reportFolders = new ArrayList<FilePath>();
 
     if (files.length == 0) {
-      throw new IllegalArgumentException("Could not find a Gatling report in results folder.");
+      logger.println("Could not find a Gatling report in results folder.");
+      return Collections.emptyList();
     }
 
     // Get reports folders for all "global_stats.json" found
@@ -104,53 +106,53 @@ public class GatlingPublisher extends Recorder {
       reportFolders.add(file.getParent().getParent());
     }
 
-        List<FilePath> reportsToArchive = selectReports(reportFolders);
+    List<FilePath> reportsToArchive = selectReports(reportFolders);
 
-
-        List<BuildSimulation> simsToArchive = new ArrayList<BuildSimulation>();
 
     // If the most recent report has already been archived, there's nothing else to do
-        if (reportsToArchive.size() == 0) {
-      return simsToArchive;
+    if (reportsToArchive.isEmpty()) {
+      return Collections.emptyList();
     }
 
-        File allSimulationsDirectory = new File(rootDir, "simulations");
-        if (!allSimulationsDirectory.exists())
-            allSimulationsDirectory.mkdir();
+    List<BuildSimulation> simsToArchive = new ArrayList<BuildSimulation>();
 
-        for (FilePath reportToArchive : reportsToArchive) {
-            String name = reportToArchive.getName();
-            int dashIndex = name.lastIndexOf('-');
-            String simulation = name.substring(0, dashIndex);
-            File simulationDirectory = new File(allSimulationsDirectory, name);
-            simulationDirectory.mkdir();
+    File allSimulationsDirectory = new File(rootDir, "simulations");
+    if (!allSimulationsDirectory.exists())
+      allSimulationsDirectory.mkdir();
 
-            FilePath reportDirectory = new FilePath(simulationDirectory);
+    for (FilePath reportToArchive : reportsToArchive) {
+      String name = reportToArchive.getName();
+      int dashIndex = name.lastIndexOf('-');
+      String simulation = name.substring(0, dashIndex);
+      File simulationDirectory = new File(allSimulationsDirectory, name);
+      simulationDirectory.mkdir();
 
-            reportToArchive.copyRecursiveTo(reportDirectory);
+      FilePath reportDirectory = new FilePath(simulationDirectory);
 
-            SimulationReport report = new SimulationReport(reportDirectory, simulation);
-            report.readStatsFile();
-            BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+      reportToArchive.copyRecursiveTo(reportDirectory);
 
-            simsToArchive.add(sim);
-        }
+      SimulationReport report = new SimulationReport(reportDirectory, simulation);
+      report.readStatsFile();
+      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+
+      simsToArchive.add(sim);
+    }
 
 
     return simsToArchive;
   }
 
   private List<FilePath> selectReports(List<FilePath> reportFolders) throws InterruptedException, IOException {
-        long buildStartTime = build.getStartTimeInMillis();
-        List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
+    long buildStartTime = build.getStartTimeInMillis();
+    List<FilePath> reportsFromThisBuild = new ArrayList<FilePath>();
     for (FilePath reportFolder : reportFolders) {
-            long reportLastMod = reportFolder.lastModified();
-            if (reportLastMod > buildStartTime) {
-                logger.println("Adding report '" + reportFolder.getName() + "'");
-                reportsFromThisBuild.add(reportFolder);
-            }
+      long reportLastMod = reportFolder.lastModified();
+      if (reportLastMod > buildStartTime) {
+        logger.println("Adding report '" + reportFolder.getName() + "'");
+        reportsFromThisBuild.add(reportFolder);
+      }
     }
-        return reportsFromThisBuild;
+    return reportsFromThisBuild;
   }
 
   @Extension
@@ -167,11 +169,11 @@ public class GatlingPublisher extends Recorder {
       return Messages.Title();
     }
 
-      @Initializer(before=InitMilestone.PLUGINS_STARTED)
-      public static void addAliases() {
-         Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingPublisher", GatlingPublisher.class);
-         Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingBuildAction", GatlingBuildAction.class);
-      }
+    @Initializer(before = InitMilestone.PLUGINS_STARTED)
+    public static void addAliases() {
+      Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingPublisher", GatlingPublisher.class);
+      Items.XSTREAM2.addCompatibilityAlias("com.excilys.ebi.gatling.jenkins.GatlingBuildAction", GatlingBuildAction.class);
+    }
   }
 
 
