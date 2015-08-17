@@ -15,6 +15,7 @@
  */
 package io.gatling.jenkins;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,14 +24,17 @@ import hudson.FilePath;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 public class SimulationReport {
 
   private final FilePath reportDirectory;
 
-  private static final String STATS_FILE_PATTERN = "**/global_stats.json";
+  private static final String GLOBAL_STATS_FILE_PATTERN = "**/global_stats.json";
+  private static final String DETAILED_STATS_FILE_PATTERN = "**/stats.json";
 
   private RequestReport globalReport;
+  private DetailedRequestReport detailedReports;
 
   private final String simulation;
 
@@ -39,19 +43,28 @@ public class SimulationReport {
     this.simulation = simulation;
   }
 
-  public void readStatsFile() throws IOException, InterruptedException {
+  public void readGlobalStatsFile() throws IOException, InterruptedException {
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    File jsonFile = locateStatsFile();
+    File jsonFile = locateStatsFile(GLOBAL_STATS_FILE_PATTERN);
     globalReport = mapper.readValue(jsonFile, new TypeReference<RequestReport>() {
     });
   }
 
-  private File locateStatsFile() throws IOException, InterruptedException {
-    FilePath[] files = reportDirectory.list(STATS_FILE_PATTERN);
+  public void readDetailedStatsFile() throws IOException, InterruptedException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+    File jsonFile = locateStatsFile(DETAILED_STATS_FILE_PATTERN);
+    detailedReports = mapper.readValue(jsonFile, new TypeReference<DetailedRequestReport>() {
+    });
+  }
+
+  private File locateStatsFile(String filePattern) throws IOException, InterruptedException {
+    FilePath[] files = reportDirectory.list(filePattern);
 
     if (files.length == 0)
-      throw new FileNotFoundException("Unable to locate the simulation results for " + simulation);
+      throw new FileNotFoundException("Unable to locate the simulation results for " + simulation + ", pattern: " + filePattern);
 
     return new File(files[0].getRemote());
   }
@@ -62,5 +75,9 @@ public class SimulationReport {
 
   public RequestReport getGlobalReport() {
     return globalReport;
+  }
+
+  public Map<String, RequestReport> getDetailedReports() {
+    return detailedReports.getReports();
   }
 }

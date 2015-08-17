@@ -132,8 +132,9 @@ public class GatlingPublisher extends Recorder {
       reportToArchive.copyRecursiveTo(reportDirectory);
 
       SimulationReport report = new SimulationReport(reportDirectory, simulation);
-      report.readStatsFile();
-      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), reportDirectory);
+      report.readGlobalStatsFile();
+      report.readDetailedStatsFile();
+      BuildSimulation sim = new BuildSimulation(simulation, report.getGlobalReport(), report.getDetailedReports(), reportDirectory);
 
       simsToArchive.add(sim);
     }
