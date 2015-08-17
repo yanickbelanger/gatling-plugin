@@ -5,14 +5,31 @@
 			<st:include it="${it.build}" page="sidepanel.jelly"/>
 		</l:side-panel>
 		<l:main-panel>
-            <h2>${%AvailableReports} :</h2>
-            <ul>
-                <j:forEach items="${it.simulations}" var="sim">
-                    <li>
-                        <a href="../${it.getReportURL(sim.simulationName)}" target="_blank">${sim.simulationName}</a>
-                    </li>
-                </j:forEach>
-            </ul>
+            <h2>${%ExecutedSimulations} :</h2>
+            <j:forEach items="${it.simulations}" var="sim">
+            	<h3>${sim.simulationName}</h3>
+                <a href="../${it.getReportURL(sim.simulationName)}" target="_blank">${%ViewReport}</a><br/>
+                <br/>
+                <h4>${%ResponseTimeChanges} :</h4><br/>
+                <table border="1">
+                	<tr>
+                		<th>${%RequestName}</th>
+                		<th>${%PreviousValue}</th>
+                		<th>${%CurrentValue}</th>
+                		<th>${%RelativePerformanceDelta}</th>
+                	</tr>
+                	<j:forEach items="${it.getPerformanceDelta(sim.simulationName).deltas}" var="delta">
+                		<tr>
+                			<td>${delta.name}</td>
+                			<td>${delta.formattedPreviousValue}</td>
+                			<td>${delta.formattedCurrentValue}</td>
+                			<td>${delta.formattedRelativeDelta}</td>
+                		</tr>
+                	</j:forEach>
+                </table>
+                <br/>
+                <hr/>
+            </j:forEach>
 		</l:main-panel>
 	</l:layout>
 </j:jelly>

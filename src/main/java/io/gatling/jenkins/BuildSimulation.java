@@ -16,6 +16,8 @@
 package io.gatling.jenkins;
 
 
+import java.util.Map;
+
 import hudson.FilePath;
 
 /**
@@ -26,11 +28,13 @@ import hudson.FilePath;
 public class BuildSimulation {
   private final String simulationName;
   private final RequestReport requestReport;
+  private final Map<String, RequestReport> detailedReports;
   private final FilePath simulationDirectory;
 
-  public BuildSimulation(String simulationName, RequestReport requestReport, FilePath simulationDirectory) {
+  public BuildSimulation(String simulationName, RequestReport requestReport, Map<String, RequestReport> detailedReports, FilePath simulationDirectory) {
     this.simulationName = simulationName;
     this.requestReport = requestReport;
+    this.detailedReports = detailedReports;
     this.simulationDirectory = simulationDirectory;
   }
 
@@ -40,6 +44,10 @@ public class BuildSimulation {
 
   public RequestReport getRequestReport() {
     return requestReport;
+  }
+  
+  public Map<String, RequestReport> getDetailedReports() {
+    return detailedReports;
   }
 
   public FilePath getSimulationDirectory() {

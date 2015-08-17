@@ -69,7 +69,7 @@ public class GatlingBuildAction implements Action {
     return new StringBuilder().append(URL_NAME).append("/report/").append(simName).toString();
   }
 
-  private BuildSimulation getSimulation(String simulationName) {
+  public BuildSimulation getSimulation(String simulationName) {
     // this isn't the most efficient implementation in the world :)
     for (BuildSimulation sim : this.getSimulations()) {
       if (sim.getSimulationName().equals(simulationName)) {
@@ -79,4 +79,7 @@ public class GatlingBuildAction implements Action {
     return null;
   }
 
+  public PerformanceDelta getPerformanceDelta(String simName) {
+    return new PerformanceDelta(build, simName);
+  }
 }
